@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:title="生活">
+            <menu>
+            <item
+                android:id="@+id/nav_wather"
+                android:icon="@drawable/weather_icon"
+                android:title="天氣" />
+            <item
+                android:id="@+id/nav_earthquake"
+                android:icon="@drawable/news_icon"
+                android:title="地震" />
+            </menu>
+        </item>
+
+    </group>
+
+</menu>
