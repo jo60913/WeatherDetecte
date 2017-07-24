@@ -1,5 +1,6 @@
 package com.example.jo.weatherdetecte;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.text.DateFormat;
@@ -11,7 +12,7 @@ import static com.example.jo.weatherdetecte.R.drawable.location;
  * Created by jo on 2017/7/9.
  */
 
-public class EarthquakeInfo {
+public class EarthquakeInfo implements Serializable {
     private String mag;
     private String place;
     private String country;

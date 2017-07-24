@@ -38,20 +38,12 @@ public class EarthquakeShow extends AppCompatActivity implements OnMapReadyCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_earthquake_show);
-
+        SupportMapFragment mapFragment = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.fragment));
+        mapFragment.getMapAsync(EarthquakeShow.this);
         new catchEarthquakeJson(this).execute();
         EarthquakeItem = (RecyclerView)findViewById(R.id.earthquake_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         EarthquakeItem.setLayoutManager(layoutManager);
-        Thread T = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SupportMapFragment mapFragment = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.fragment));
-                mapFragment.getMapAsync(EarthquakeShow.this);
-            }
-        });
-        T.start();
-
     }
 
     public void locationChange(EarthquakeInfo EI){
@@ -73,6 +65,13 @@ public class EarthquakeShow extends AppCompatActivity implements OnMapReadyCallb
             super();
             mContext = context;
         }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
         @Override
         protected String doInBackground(Void... params) {
             String responseData = null;
