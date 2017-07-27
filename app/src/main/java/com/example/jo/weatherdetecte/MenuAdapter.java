@@ -2,10 +2,13 @@ package com.example.jo.weatherdetecte;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import org.w3c.dom.Text;
 
@@ -28,12 +31,15 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
     @Override
     public MenuAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item,parent,false);
+        ViewHolder holder = new ViewHolder(view);
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(MenuAdapter.ViewHolder holder, int position) {
-
+        holder.menuTex.setText(menuItemName[position]);
+        Glide.with(mContext).load(menuItemIcon[position]).into(holder.menuItemImg);
     }
 
     @Override
