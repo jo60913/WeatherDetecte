@@ -37,7 +37,7 @@ public class EarthquakeInfo implements Serializable {
     }
     public String getTime(){
         Date Dtime = new Date(this.time);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         String dateString = sdf.format(Dtime);
         return dateString;
@@ -52,7 +52,7 @@ public class EarthquakeInfo implements Serializable {
         return deep;
     }
     public String getCountry(){
-        String[] locations = place.split(",");
+        String[] locations = place.split(",");      //拆字串 第一個字串是地點，第二個字串是國家
         if(locations.length == 2) {
             if (locations[1].length() >= 20)
                 country = "high_seas";

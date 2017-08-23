@@ -1,6 +1,7 @@
 package com.example.jo.weatherdetecte;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,10 +18,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,12 +42,21 @@ public class EarthquakeShow extends AppCompatActivity implements OnMapReadyCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_earthquake_show);
-        SupportMapFragment mapFragment = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.fragment));
-        mapFragment.getMapAsync(EarthquakeShow.this);
-        new catchEarthquakeJson(this).execute();
+        SupportMapFragment mapFragment = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.earthquake_fragment));
+        mapFragment.getMapAsync(this);
+
+        SharedPreferences saveInfo = getSharedPreferences("saveInfo",MODE_PRIVATE);
+        String earthquakeString = saveInfo.getString("earthquake","");
+        Type type =new TypeToken<ArrayList<EarthquakeInfo>>() { }.getType();
+        EarthquakeList = new Gson().fromJson(earthquakeString,type);
+
         EarthquakeItem = (RecyclerView)findViewById(R.id.earthquake_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         EarthquakeItem.setLayoutManager(layoutManager);
+        EarthquakeinfoAdapter = new EarthquakeInfoAdapter(this,EarthquakeList);
+        EarthquakeItem.setAdapter(EarthquakeinfoAdapter);
+        EarthquakeItem.addItemDecoration(new RecyclerviewItemDivider());
+
     }
 
     public void locationChange(EarthquakeInfo EI){
@@ -55,69 +68,11 @@ public class EarthquakeShow extends AppCompatActivity implements OnMapReadyCallb
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap) {       //mMap是在這裡初始化的 所以再onCreate做任何mMap的動作都會失敗
         mMap = googleMap;
-    }
-
-    private class catchEarthquakeJson extends AsyncTask<Void,Void,String> {
-        private Context mContext;
-        public catchEarthquakeJson(Context context) {
-            super();
-            mContext = context;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            String responseData = null;
-            try{
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url(url).build();
-                Response response = client.newCall(request).execute();
-                responseData = response.body().string();
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            return responseData;
-        }
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            JSONObject jsonObject = null;
-            try{
-                jsonObject = new JSONObject(result);
-                JSONArray jsonArray = jsonObject.getJSONArray("features");
-                int earthquakeCount = jsonArray.length();
-                Log.d("earthquake","size of features : " + String.valueOf(earthquakeCount));
-                Log.d("earthquake","json : "+jsonArray.getJSONObject(0));
-                for(int i = 0;i<earthquakeCount;i++){
-                    String mag = jsonArray.getJSONObject(i).getJSONObject("properties").getString("mag");
-                    String place = jsonArray.getJSONObject(i).getJSONObject("properties").getString("place");
-                    long time = jsonArray.getJSONObject(i).getJSONObject("properties").getLong("time");
-                    double lng = jsonArray.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getDouble(0);
-                    double lat = jsonArray.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getDouble(1);
-                    double deep = jsonArray.getJSONObject(i).getJSONObject("geometry").getJSONArray("coordinates").getDouble(2);
-                    EarthquakeInfo EI = new EarthquakeInfo(mag,place,time,lng,lat,deep);
-                    EarthquakeList.add(EI);
-                    Log.d("earthquake","EI : "+EarthquakeList.get(i).getMag() +" , "+EarthquakeList.get(i).getPlace()+" , "+EarthquakeList.get(i).getTime()+" , "+EarthquakeList.get(i).getLng()+" , "+EarthquakeList.get(i).getLat()+" , "+EarthquakeList.get(i).getDeep()+" ,"+EarthquakeList.get(i).getCountry());
-                }
-                EarthquakeinfoAdapter = new EarthquakeInfoAdapter(mContext,EarthquakeList);
-                EarthquakeItem.setAdapter(EarthquakeinfoAdapter);
-                EarthquakeInfo EI = EarthquakeList.get(0);
-                double lat = EI.getLat();
-                double lng = EI.getLng();
-                LatLng location = new LatLng(lat,lng);
-                mMap.addMarker(new MarkerOptions().position(location).title(EI.getCountry()).snippet(EI.getPlace()+"\n"+EI.getTime())).showInfoWindow();
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
-
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
+        EarthquakeInfo EI = EarthquakeList.get(0);
+        LatLng location = new LatLng(EI.getLat(),EI.getLng());
+        mMap.addMarker(new MarkerOptions().position(location).title(EI.getCountry()).snippet(EI.getPlace()+"\n"+EI.getTime())).showInfoWindow();
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
     }
 }

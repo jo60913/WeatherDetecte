@@ -2,6 +2,7 @@ package com.example.jo.weatherdetecte;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -22,7 +23,12 @@ import java.util.ArrayList;
 
 public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
     private ArrayList<CityShow_menu> CityList = new ArrayList<>();
+    private ArrayList<WeatherInfo> WeatherInfoAList = new ArrayList<>();
     private Context mContext;
+
+    public CityAdapter (ArrayList<WeatherInfo> _WeatherInfoAList){
+        WeatherInfoAList = _WeatherInfoAList;
+    }
 
     public void addCity(String cityname,int cityimg,String cityurl){
         CityList.add(new CityShow_menu(cityname,cityimg,cityurl));
@@ -38,8 +44,11 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
             public void onClick(View v) {
                 Intent it = new Intent(mContext,WeatherShow.class);
                 int position = VH.getAdapterPosition();
-                it.putExtra("CityUrl",CityList.get(position).getCityUrl());
-                it.putExtra("CityImg",CityList.get(position).getCityImg());
+                WeatherInfo weatherinfo = WeatherInfoAList.get(position);
+                Bundle bundle = new Bundle();
+                bundle.putInt("CityImg",CityList.get(position).getCityImg());
+                bundle.putSerializable("WeatherObject",weatherinfo);
+                it.putExtras(bundle);
                 mContext.startActivity(it);
             }
         });

@@ -16,7 +16,6 @@
     <style name="AppTheme.Base" parent="Theme.AppCompat">
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <!-- 使用 API Level 22 編譯的話，要拿掉前綴字 -->
         <item name="windowNoTitle">true</item>
         <item name="android:colorBackground">@color/background_material_dark</item>
     </style>
@@ -29,4 +28,12 @@
     </style>
 
     <style name="nighttheme" parent="daytheme" />
+
+    <style name="AppTheme.MainTheme" parent="AppTheme" >
+        <item name="android:textColorPrimary">@color/common_google_signin_btn_text_dark</item>
+        <item name="android:textColorSecondary">@color/common_google_signin_btn_text_light_default</item>
+        <item name="android:textColorSecondaryInverse">@color/common_google_signin_btn_text_light_default</item>
+    </style>
+
+
 </resources>

@@ -1,6 +1,7 @@
 package com.example.jo.weatherdetecte;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,16 +24,22 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -41,6 +48,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView recyclerView;
+    private ArrayList<WeatherInfo> WeatherAList = new ArrayList<>();
 
     private CityAdapter cityAdapter;
     private final String WEBURL = "https://free-api.heweather.com/v5/weather?city=";
@@ -61,11 +69,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
+        SharedPreferences saveInfo = getSharedPreferences("saveInfo",MODE_PRIVATE);
+        String weatherString = saveInfo.getString("weatherAList","");
+        Type type =new TypeToken<ArrayList<WeatherInfo>>() { }.getType();
+        WeatherAList = new Gson().fromJson(weatherString,type);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
-        cityAdapter = new CityAdapter();
+        cityAdapter = new CityAdapter(WeatherAList);
         InitCity();
         recyclerView.setAdapter(cityAdapter);
 

@@ -35,7 +35,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class WeatherShow extends AppCompatActivity {
-    private String url;
     private ImageView cityPhotoImg;
     private TextView cityTemperatureText;
     private TextView cityHumidityText;
@@ -56,10 +55,11 @@ public class WeatherShow extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_show);
-        url = getIntent().getStringExtra("CityUrl");
-        Log.d("cityname","url : "+ url);
-        int cityphotoimg = getIntent().getIntExtra("CityImg",0);
+        Bundle bundle = getIntent().getExtras();
+        int cityphotoimg = bundle.getInt("CityImg",0);
         cityPhotoImg = (ImageView)findViewById(R.id.CityImg);
+        WeatherInfo weatherInfo = (WeatherInfo) bundle.getSerializable("WeatherObject");
+
         Glide.with(this).load(cityphotoimg).override(240,160).into(cityPhotoImg);
         cityTemperatureText = (TextView)findViewById(R.id.CitytempText);
         cityHumidityText = (TextView)findViewById(R.id.CityhumidityText);
@@ -83,10 +83,28 @@ public class WeatherShow extends AppCompatActivity {
         citySportContent = (TextView)findViewById(R.id.CitySportContentText);
         citySuitContent = (TextView)findViewById(R.id.CitySuitContent);
 
-        new catchJson(this).execute();
+        //new catchJson(this).execute();
+
+        cityTemperatureText.setText(weatherInfo.getNowTemp() + " °C");
+        cityHumidityText.setText(weatherInfo.getNowHumid()+" %");
+        cityRaindropsText.setText(weatherInfo.getNowRaindrop()+ " %");
+        cityWindsText.setText(weatherInfo.getNowWind());
+        for(int i = 0;i<weatherInfo.daysdetailList.size();i++){
+            String jsonWeatherimg = weatherInfo.daysdetailList.get(i).getWeather();
+            int weatherimg = this.getResources().getIdentifier("w"+jsonWeatherimg,"drawable",this.getPackageName());
+            DayinfoList.get(i).setWeatherImg(weatherimg);
+            DayinfoList.get(i).setDayDate(weatherInfo.daysdetailList.get(i).getDate());
+            DayinfoList.get(i).setDayTempmin(weatherInfo.daysdetailList.get(i).getTempMin());
+            DayinfoList.get(i).setDayTempmax(weatherInfo.daysdetailList.get(i).getTempMax());
+            DayinfoList.get(i).setDayRaindrops(weatherInfo.daysdetailList.get(i).getRaindrop());
+        }
+        cityConfortableContent.setText(weatherInfo.getComfortableContent());
+        cityUVContent.setText(weatherInfo.getUVContent());
+        citySportContent.setText(weatherInfo.getSportContent());
+        citySuitContent.setText(weatherInfo.getSuitContent());
     }
 
-    class catchJson extends AsyncTask<Void,Void,String> {
+    /*class catchJson extends AsyncTask<Void,Void,String> {
         private Context mContext;
         public catchJson(Context context){
             mContext = context;
@@ -140,5 +158,5 @@ public class WeatherShow extends AppCompatActivity {
             }
 
         }
-    }
+    }*/
 }

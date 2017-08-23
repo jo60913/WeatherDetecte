@@ -1,6 +1,7 @@
 package com.example.jo.weatherdetecte;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -158,7 +160,13 @@ public class LoadActivity extends AppCompatActivity {
                         weatherAList.add(WI);
                     }
                 }
-                getIntent().putExtra("weatherAList",weatherAList);
+                Gson earthquakeGaon = new Gson();
+                String earthquakeString = earthquakeGaon.toJson(EarthquakeList);
+                Gson weatherGson = new Gson();
+                String weatherString = weatherGson.toJson(weatherAList);
+                SharedPreferences saveInfo = getSharedPreferences("saveInfo",MODE_PRIVATE);
+                saveInfo.edit().putString("weatherAList",weatherString)
+                        .putString("earthquake",earthquakeString).commit();
                 LoadingText.setText("解析完成即將進入頁面");
                 setResult(RESULT_OK,getIntent());
                 finish();

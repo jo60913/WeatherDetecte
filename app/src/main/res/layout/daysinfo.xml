@@ -8,6 +8,7 @@
         android:layout_height="48dp"
         android:src="@drawable/sunday"/>
     <TextView
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
         android:id="@+id/daydate"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -27,7 +28,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="23°C"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
 
         <TextView
             android:id="@+id/daytempmax"
@@ -36,7 +38,8 @@
             android:layout_weight="1"
             android:layout_below="@+id/mintemp"
             android:text="30°C"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -55,7 +58,8 @@
             android:text="20%"
             android:gravity="center"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
     </RelativeLayout>
 
 </LinearLayout>

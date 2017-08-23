@@ -45,6 +45,7 @@
                 android:padding="1dp"/>
             <TextView
                 android:id="@+id/earthquack_location"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="5"

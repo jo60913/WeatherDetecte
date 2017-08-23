@@ -15,5 +15,6 @@
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:text="天氣預報"/>
+        android:text="天氣預報"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
 </LinearLayout>
