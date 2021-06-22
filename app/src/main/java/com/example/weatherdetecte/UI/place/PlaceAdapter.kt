@@ -34,7 +34,7 @@ class PlaceAdapter(private val list: List<Location>) :
         val holder = ViewHolder(view)
         holder.item.setOnClickListener {
             val position = holder.adapterPosition
-            val place = list[position]
+            val place = weatherList?.get(position)
             val intent = Intent(parent.context,WeatherActivity::class.java)
             intent.apply {
                 putExtra("PlaceObj",place)
@@ -57,7 +57,7 @@ class PlaceAdapter(private val list: List<Location>) :
 
     override fun getItemCount(): Int = weatherList!!.size
 
-    public fun setList(list:List<Location>){
+    fun setList(list:List<Location>){
         weatherList = list
     }
 }
